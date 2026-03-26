@@ -1,0 +1,34 @@
+"""
+Library for finding Primes
+"""
+import math
+
+def prime(number: int) -> int | None:
+    """
+    Find the nth prime number
+
+    Assumptions: We start at 2 and are leveraging the Sieve of Eratosthenes
+    :param int number: The nth prime number to find
+    :return int: The nth prime number value
+    """
+    if number < 1:
+        raise ValueError('there is no zeroth prime')
+    if number == 1:
+        return 2
+    if number < 6:
+        return [2, 3, 5, 7, 11][number - 1]
+
+    limit = int(number * (math.log(number) + math.log(math.log(number))))
+
+    sieve = [True] * (limit + 1)
+    sieve[0] = sieve[1] = False
+    count = 0
+
+    for prime_number in range(2, limit + 1):
+        if sieve[prime_number]:
+            count += 1
+            if count == number:
+                return prime_number
+            if prime_number * prime_number <= limit:
+                sieve[prime_number*prime_number:limit + 1:prime_number] = [False] * len(range(prime_number*prime_number, limit+1, prime_number))
+    return None
